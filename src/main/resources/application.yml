@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: tasktracker
+  datasource:
+    url: jdbc:postgresql://localhost:5432/task_tracker
+    username: postgres
+    password: toor
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+token:
+  expiration: 86400000
+  key: 4420e34ab50b3e39923e8ceaaa471ae62d4d953466d463080ddc4d77599fb37f
