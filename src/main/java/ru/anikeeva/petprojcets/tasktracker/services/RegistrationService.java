@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.anikeeva.petprojcets.tasktracker.entities.User;
 import ru.anikeeva.petprojcets.tasktracker.entities.enums.EnumRole;
 import ru.anikeeva.petprojcets.tasktracker.entities.impl.UserDetailsImpl;
+import ru.anikeeva.petprojcets.tasktracker.exceptions.DuplicateAccountException;
 import ru.anikeeva.petprojcets.tasktracker.payload.request.SignUpRequest;
 import ru.anikeeva.petprojcets.tasktracker.payload.response.JwtAuthenticationResponse;
 import ru.anikeeva.petprojcets.tasktracker.repositories.UserRepository;
@@ -18,12 +19,10 @@ public class RegistrationService {
 
     public JwtAuthenticationResponse registerUser(SignUpRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
-            //ToDo: кастомное исключение
-            throw new RuntimeException("Пользователь с таким именем уже существует");
+            throw new DuplicateAccountException("Пользователь с таким именем уже существует");
         }
         if (userRepository.existsByEmail(request.getEmail())) {
-            //ToDo: кастомное исключение
-            throw new RuntimeException("Пользователь с таким email уже существует");
+            throw new DuplicateAccountException("Пользователь с таким email уже существует");
         }
         User user = new User(
                 request.getUsername(),
