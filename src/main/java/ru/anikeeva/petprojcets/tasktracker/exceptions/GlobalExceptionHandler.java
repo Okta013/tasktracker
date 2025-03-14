@@ -11,4 +11,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorMessage> handleDuplicateAccountException(DuplicateAccountException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage(e.getMessage()));
     }
+
+    @ExceptionHandler(BadTokenException.class)
+    public ResponseEntity<ErrorMessage> handleBadTokenException(BadTokenException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage(e.getMessage()));
+    }
 }

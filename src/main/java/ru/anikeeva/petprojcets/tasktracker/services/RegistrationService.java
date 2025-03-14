@@ -29,7 +29,7 @@ public class RegistrationService implements IUserService{
     private final int EXPIRY_TIME_MINUTES = 1440;
 
     @Override
-    public UserDTO registerUser(SignUpRequest request) {
+    public UserDTO registerUser(final SignUpRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new DuplicateAccountException("Пользователь с таким именем уже существует");
         }
@@ -49,13 +49,13 @@ public class RegistrationService implements IUserService{
     }
 
     @Override
-    public void createVerificationToken(User user, String verificationToken) {
+    public void createVerificationToken(final User user, final String verificationToken) {
         VerificationToken myToken = new VerificationToken(verificationToken, user, EXPIRY_TIME_MINUTES);
         tokenRepository.save(myToken);
     }
 
     @Override
-    public JwtConfirmResponse confirmEmail(String token) {
+    public JwtConfirmResponse confirmEmail(final String token) {
         VerificationToken verificationToken = tokenRepository.findByToken(token).orElseThrow(
                 () -> new IllegalArgumentException("Токен не найден"));
         if (verificationToken.getExpiryDate().before(new Date())) {
