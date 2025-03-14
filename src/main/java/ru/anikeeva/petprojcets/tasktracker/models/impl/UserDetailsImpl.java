@@ -1,4 +1,4 @@
-package ru.anikeeva.petprojcets.tasktracker.entities.impl;
+package ru.anikeeva.petprojcets.tasktracker.models.impl;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
@@ -8,7 +8,7 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import ru.anikeeva.petprojcets.tasktracker.entities.User;
+import ru.anikeeva.petprojcets.tasktracker.models.User;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -25,6 +25,7 @@ public class UserDetailsImpl implements UserDetails {
     @JsonIgnore
     private String password;
     private String email;
+    private boolean isEnabled;
     private boolean isDeleted;
     private GrantedAuthority authority;
 
@@ -35,6 +36,7 @@ public class UserDetailsImpl implements UserDetails {
                 user.getUsername(),
                 user.getPassword(),
                 user.getEmail(),
+                user.isEnabled(),
                 user.isDeleted(),
                 authority
         );
@@ -62,7 +64,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return !isDeleted;
+        return isDeleted;
     }
 
     @Override
@@ -72,7 +74,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return !isDeleted;
+        return isEnabled;
     }
 
     @Override

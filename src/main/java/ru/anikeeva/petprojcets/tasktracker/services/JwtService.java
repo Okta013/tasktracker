@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import ru.anikeeva.petprojcets.tasktracker.entities.impl.UserDetailsImpl;
+import ru.anikeeva.petprojcets.tasktracker.models.impl.UserDetailsImpl;
 
 import javax.crypto.SecretKey;
 import java.util.Date;

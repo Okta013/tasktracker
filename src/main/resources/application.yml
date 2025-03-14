@@ -11,6 +11,17 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+  mail:
+    host: smtp.gmail.com
+    username: staccato013@gmail.com
+    password: pepe vyfc ouqr jhee
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: false
 token:
   expiration: 86400000
   key: 4420e34ab50b3e39923e8ceaaa471ae62d4d953466d463080ddc4d77599fb37f

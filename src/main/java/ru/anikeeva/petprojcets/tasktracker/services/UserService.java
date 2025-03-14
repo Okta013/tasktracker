@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import ru.anikeeva.petprojcets.tasktracker.entities.User;
+import ru.anikeeva.petprojcets.tasktracker.models.User;
 import ru.anikeeva.petprojcets.tasktracker.repositories.UserRepository;
 
 @Service
@@ -25,6 +25,4 @@ public class UserService {
         var username = SecurityContextHolder.getContext().getAuthentication().getName();
         return findUserByUsername(username);
     }
-
-
 }

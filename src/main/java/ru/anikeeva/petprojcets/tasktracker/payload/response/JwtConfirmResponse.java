@@ -1,4 +1,4 @@
-package ru.anikeeva.petprojcets.tasktracker.exceptions;
+package ru.anikeeva.petprojcets.tasktracker.payload.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,8 +7,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class ErrorMessage {
+@NoArgsConstructor
+public class JwtConfirmResponse {
     private String message;
+    private boolean success;
 }
