@@ -1,4 +1,4 @@
-package ru.anikeeva.petprojcets.tasktracker.entities.enums;
+package ru.anikeeva.petprojcets.tasktracker.models.enums;
 
 public enum EnumPosition {
     ARCHITECT,

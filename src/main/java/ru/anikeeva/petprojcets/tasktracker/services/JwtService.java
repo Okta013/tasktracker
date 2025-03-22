@@ -11,7 +11,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import ru.anikeeva.petprojcets.tasktracker.entities.impl.UserDetailsImpl;
+import ru.anikeeva.petprojcets.tasktracker.exceptions.BadTokenException;
+import ru.anikeeva.petprojcets.tasktracker.models.impl.UserDetailsImpl;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
@@ -88,14 +89,11 @@ public class JwtService {
                     .parseClaimsJws(token)
                     .getBody();
         } catch (ExpiredJwtException ex) {
-            //ToDo: кастомное исключение
-            throw new RuntimeException("Срок действия токена истек", ex);
+            throw new BadTokenException("Срок действия токена истек");
         } catch (MalformedJwtException ex) {
-            //ToDo: кастомное исключение
-            throw new RuntimeException("Недопустимый токен", ex);
+            throw new BadTokenException("Недопустимый токен");
         } catch (Exception ex) {
-            //ToDo: кастомное исключение
-            throw new RuntimeException("Не удалось выполнить парсинг токена", ex);
+            throw new BadTokenException("Не удалось выполнить парсинг токена");
         }
     }
 

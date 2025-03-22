@@ -1,4 +1,4 @@
-package ru.anikeeva.petprojcets.tasktracker.entities;
+package ru.anikeeva.petprojcets.tasktracker.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,7 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.anikeeva.petprojcets.tasktracker.entities.enums.EnumPosition;
+import ru.anikeeva.petprojcets.tasktracker.models.enums.EnumPosition;
 
 import java.util.UUID;
 

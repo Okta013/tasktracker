@@ -1,4 +1,4 @@
-package ru.anikeeva.petprojcets.tasktracker.entities;
+package ru.anikeeva.petprojcets.tasktracker.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,7 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.anikeeva.petprojcets.tasktracker.entities.enums.EnumRole;
+import ru.anikeeva.petprojcets.tasktracker.models.enums.EnumRole;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -42,6 +42,9 @@ public class User {
     @Column(name = "birthday")
     private LocalDate birthday;
 
+    @Column(name = "is_enabled")
+    private boolean isEnabled;
+
     @Column(name = "is_deleted")
     private boolean isDeleted;
 
@@ -57,6 +60,8 @@ public class User {
         this.password = password;
         this.email = email;
         this.role = role;
+        this.isEnabled = false;
+        this.isDeleted = false;
     }
 
     @Override
