@@ -17,7 +17,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
         User user = userService.findUserByUsername(username);
-        if (user.isEnabled()) {
+        if (!user.isEnabled()) {
             //ToDo: кастомное исключение
             throw new RuntimeException("Пользователь удален");
         }

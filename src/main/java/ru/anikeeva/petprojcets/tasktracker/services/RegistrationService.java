@@ -3,6 +3,7 @@ package ru.anikeeva.petprojcets.tasktracker.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.anikeeva.petprojcets.tasktracker.dto.UserDTO;
 import ru.anikeeva.petprojcets.tasktracker.exceptions.DuplicateAccountException;
@@ -26,6 +27,7 @@ public class RegistrationService implements IUserService{
     private final ApplicationEventPublisher eventPublisher;
     private final VerificationTokenRepository tokenRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
     private final int EXPIRY_TIME_MINUTES = 1440;
 
     @Override
@@ -38,7 +40,7 @@ public class RegistrationService implements IUserService{
         }
         User user = new User(
                 request.getUsername(),
-                BCrypt.hashpw(request.getPassword(), BCrypt.gensalt()),
+                passwordEncoder.encode(request.getPassword()),
                 request.getEmail(),
                 EnumRole.ROLE_USER
         );
