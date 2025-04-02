@@ -42,6 +42,9 @@ public class User {
     @Column(name = "birthday")
     private LocalDate birthday;
 
+    @Column(name = "image_url")
+    private String imageUrl;
+
     @Column(name = "is_enabled")
     private boolean isEnabled;
 
