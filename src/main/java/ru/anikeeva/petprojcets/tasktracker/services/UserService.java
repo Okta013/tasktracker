@@ -9,11 +9,13 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.anikeeva.petprojcets.tasktracker.dto.UserDTO;
 import ru.anikeeva.petprojcets.tasktracker.exceptions.IncorrectParametersException;
+import ru.anikeeva.petprojcets.tasktracker.exceptions.NoRightException;
 import ru.anikeeva.petprojcets.tasktracker.exceptions.UserNotFoundException;
 import ru.anikeeva.petprojcets.tasktracker.mappers.UserMapper;
 import ru.anikeeva.petprojcets.tasktracker.models.Position;
 import ru.anikeeva.petprojcets.tasktracker.models.User;
 import ru.anikeeva.petprojcets.tasktracker.models.enums.EnumRole;
+import ru.anikeeva.petprojcets.tasktracker.models.impl.UserDetailsImpl;
 import ru.anikeeva.petprojcets.tasktracker.repositories.UserRepository;
 
 import java.time.LocalDate;
@@ -54,5 +56,16 @@ public class UserService {
         String emailBuilder = new StringBuilder("%" + email + "%").toString();
         return userRepository.findAllUsersWithParameters(usernameBuilder, phoneBuilder, emailBuilder, birthday)
                 .stream().map(userMapper::userToUserDTO).toList();
+    }
+
+    public UserDTO changeUser(final UserDetailsImpl currentUser, final UUID userId, final UserDTO userDTO) {
+        if (!currentUser.getId().equals(userId)) {
+            throw new NoRightException("У вас нет прав на изменение профиля этого пользователя");
+        }
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("Пользователь не найден"));
+        if (userDTO != null) {
+            userMapper.updateUserFromUserDTO(userDTO, user);
+        }
+        return userMapper.userToUserDTO(userRepository.save(user));
     }
 }

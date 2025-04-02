@@ -4,14 +4,18 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.anikeeva.petprojcets.tasktracker.dto.UserDTO;
 import ru.anikeeva.petprojcets.tasktracker.models.Position;
 import ru.anikeeva.petprojcets.tasktracker.models.enums.EnumRole;
+import ru.anikeeva.petprojcets.tasktracker.models.impl.UserDetailsImpl;
 import ru.anikeeva.petprojcets.tasktracker.services.UserService;
 
 import java.time.LocalDate;
@@ -47,5 +51,11 @@ public class UserController {
                                    @RequestParam(required = false)String email,
                                    @RequestParam(required = false)LocalDate birthday) {
         return userService.findUsers(username, phone, email, birthday);
+    }
+
+    @PostMapping("/{id}/change")
+    public UserDTO changeUser(@AuthenticationPrincipal UserDetailsImpl currentUser, @PathVariable UUID id,
+                              @RequestBody UserDTO userDTO) {
+        return userService.changeUser(currentUser, id, userDTO);
     }
 }

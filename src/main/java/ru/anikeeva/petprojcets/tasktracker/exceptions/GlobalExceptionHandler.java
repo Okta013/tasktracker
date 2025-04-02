@@ -27,4 +27,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorMessage> handleIncorrectParametersException(IncorrectParametersException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage(e.getMessage()));
     }
+
+    @ExceptionHandler(NoRightException.class)
+    public ResponseEntity<ErrorMessage> handleNoRightException(NoRightException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage(e.getMessage()));
+    }
 }
