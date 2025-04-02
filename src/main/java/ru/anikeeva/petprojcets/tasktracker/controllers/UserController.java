@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -57,5 +58,10 @@ public class UserController {
     public UserDTO changeUser(@AuthenticationPrincipal UserDetailsImpl currentUser, @PathVariable UUID id,
                               @RequestBody UserDTO userDTO) {
         return userService.changeUser(currentUser, id, userDTO);
+    }
+
+    @DeleteMapping("/{id}/delete")
+    public void deleteUser(@AuthenticationPrincipal UserDetailsImpl currentUser, @PathVariable UUID id) {
+        userService.deleteUser(currentUser, id);
     }
 }

@@ -68,4 +68,13 @@ public class UserService {
         }
         return userMapper.userToUserDTO(userRepository.save(user));
     }
+
+    public void deleteUser(final UserDetailsImpl currentUser, final UUID userId) {
+        if (!currentUser.getId().equals(userId)) {
+            throw new NoRightException("У вас нет прав на удаление профиля этого пользователя");
+        }
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("Пользователь не найден"));
+        user.setDeleted(true);
+        userRepository.save(user);
+    }
 }
