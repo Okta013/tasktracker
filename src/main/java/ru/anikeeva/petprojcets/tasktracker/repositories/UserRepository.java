@@ -20,6 +20,8 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     Optional<User> findByUsername(String username);
     boolean existsByUsername(String username);
     boolean existsByEmail(String email);
+    Optional<User> findByEmail(String email);
+    Optional<User> findByPhone(String phone);
 
     @Query("""
             FROM User u WHERE (:startBirthday IS NULL OR u.birthday >= :startBirthday) \
