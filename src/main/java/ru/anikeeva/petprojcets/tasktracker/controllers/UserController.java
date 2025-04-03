@@ -17,6 +17,8 @@ import ru.anikeeva.petprojcets.tasktracker.dto.UserDTO;
 import ru.anikeeva.petprojcets.tasktracker.models.Position;
 import ru.anikeeva.petprojcets.tasktracker.models.enums.EnumRole;
 import ru.anikeeva.petprojcets.tasktracker.models.impl.UserDetailsImpl;
+import ru.anikeeva.petprojcets.tasktracker.payload.request.ChangePasswordRequest;
+import ru.anikeeva.petprojcets.tasktracker.services.PasswordService;
 import ru.anikeeva.petprojcets.tasktracker.services.UserService;
 
 import java.time.LocalDate;
@@ -28,6 +30,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final PasswordService passwordService;
 
     @GetMapping("/{id}")
     public UserDTO showUser(@PathVariable UUID id) {
@@ -63,5 +66,11 @@ public class UserController {
     @DeleteMapping("/{id}/delete")
     public void deleteUser(@AuthenticationPrincipal UserDetailsImpl currentUser, @PathVariable UUID id) {
         userService.deleteUser(currentUser, id);
+    }
+
+    @PostMapping("/{id}/change_password")
+    public void changePassword(@AuthenticationPrincipal UserDetailsImpl currentUser, @PathVariable UUID id,
+                               @RequestBody ChangePasswordRequest request) {
+        passwordService.changePassword(currentUser, id, request);
     }
 }

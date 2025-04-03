@@ -59,9 +59,7 @@ public class UserService {
     }
 
     public UserDTO changeUser(final UserDetailsImpl currentUser, final UUID userId, final UserDTO userDTO) {
-        if (!currentUser.getId().equals(userId)) {
-            throw new NoRightException("У вас нет прав на изменение профиля этого пользователя");
-        }
+        checkRightsOfUser(currentUser, userId);
         User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("Пользователь не найден"));
         if (userDTO != null) {
             userMapper.updateUserFromUserDTO(userDTO, user);
@@ -70,11 +68,15 @@ public class UserService {
     }
 
     public void deleteUser(final UserDetailsImpl currentUser, final UUID userId) {
-        if (!currentUser.getId().equals(userId)) {
-            throw new NoRightException("У вас нет прав на удаление профиля этого пользователя");
-        }
+        checkRightsOfUser(currentUser, userId);
         User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("Пользователь не найден"));
         user.setDeleted(true);
         userRepository.save(user);
+    }
+
+    private void checkRightsOfUser(final UserDetailsImpl currentUser, final UUID userId) {
+        if (!currentUser.getId().equals(userId)) {
+            throw new NoRightException("У вас нет прав на изменение профиля этого пользователя");
+        }
     }
 }
