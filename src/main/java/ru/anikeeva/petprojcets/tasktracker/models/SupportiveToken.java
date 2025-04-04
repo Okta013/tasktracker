@@ -24,7 +24,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class VerificationToken {
+public class SupportiveToken {
     @Id
     @GeneratedValue
     private UUID id;
@@ -46,7 +46,7 @@ public class VerificationToken {
         return new Date(cal.getTime().getTime());
     }
 
-    public VerificationToken(String token, User user, int expiryTimeInMinutes) {
+    public SupportiveToken(String token, User user, int expiryTimeInMinutes) {
         this.token = token;
         this.user = user;
         this.expiryDate = calculateExpiryDate(expiryTimeInMinutes);

@@ -8,13 +8,13 @@ import ru.anikeeva.petprojcets.tasktracker.dto.UserDTO;
 import ru.anikeeva.petprojcets.tasktracker.exceptions.DuplicateAccountException;
 import ru.anikeeva.petprojcets.tasktracker.mappers.UserMapper;
 import ru.anikeeva.petprojcets.tasktracker.models.User;
-import ru.anikeeva.petprojcets.tasktracker.models.VerificationToken;
+import ru.anikeeva.petprojcets.tasktracker.models.SupportiveToken;
 import ru.anikeeva.petprojcets.tasktracker.models.enums.EnumRole;
 import ru.anikeeva.petprojcets.tasktracker.observer.OnRegistrationCompleteEvent;
 import ru.anikeeva.petprojcets.tasktracker.payload.request.SignUpRequest;
 import ru.anikeeva.petprojcets.tasktracker.payload.response.JwtConfirmResponse;
 import ru.anikeeva.petprojcets.tasktracker.repositories.UserRepository;
-import ru.anikeeva.petprojcets.tasktracker.repositories.VerificationTokenRepository;
+import ru.anikeeva.petprojcets.tasktracker.repositories.SupportiveTokenRepository;
 
 import java.util.Date;
 import java.util.Locale;
@@ -24,10 +24,11 @@ import java.util.Locale;
 public class RegistrationService implements IUserService{
     private final UserRepository userRepository;
     private final ApplicationEventPublisher eventPublisher;
-    private final VerificationTokenRepository tokenRepository;
+    private final SupportiveTokenRepository tokenRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
-    private final int EXPIRY_TIME_MINUTES = 1440;
+    private final int EXPIRY_TIME_MINUTES = 24 * 60;
+    private final String APP_URL = "http://localhost:8080";
 
     @Override
     public UserDTO registerUser(final SignUpRequest request) {
@@ -44,20 +45,19 @@ public class RegistrationService implements IUserService{
                 EnumRole.ROLE_USER
         );
         userRepository.save(user);
-        String appUrl = "http://localhost:8080";
-        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(Locale.getDefault(), appUrl, user));
+        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(Locale.getDefault(), APP_URL, user));
         return userMapper.userToUserDTO(user);
     }
 
     @Override
     public void createVerificationToken(final User user, final String verificationToken) {
-        VerificationToken myToken = new VerificationToken(verificationToken, user, EXPIRY_TIME_MINUTES);
+        SupportiveToken myToken = new SupportiveToken(verificationToken, user, EXPIRY_TIME_MINUTES);
         tokenRepository.save(myToken);
     }
 
     @Override
     public JwtConfirmResponse confirmEmail(final String token) {
-        VerificationToken verificationToken = tokenRepository.findByToken(token).orElseThrow(
+        SupportiveToken verificationToken = tokenRepository.findByToken(token).orElseThrow(
                 () -> new IllegalArgumentException("Токен не найден"));
         if (verificationToken.getExpiryDate().before(new Date())) {
             return new JwtConfirmResponse("Срок действия токена истек", false);
