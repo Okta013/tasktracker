@@ -4,6 +4,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.anikeeva.petprojcets.tasktracker.dto.UserDTO;
 import ru.anikeeva.petprojcets.tasktracker.models.Position;
+import ru.anikeeva.petprojcets.tasktracker.models.enums.EnumPosition;
 import ru.anikeeva.petprojcets.tasktracker.models.enums.EnumRole;
 import ru.anikeeva.petprojcets.tasktracker.models.impl.UserDetailsImpl;
 import ru.anikeeva.petprojcets.tasktracker.payload.request.ChangePasswordRequest;
@@ -72,5 +74,19 @@ public class UserController {
     public void changePassword(@AuthenticationPrincipal UserDetailsImpl currentUser, @PathVariable UUID id,
                                @RequestBody ChangePasswordRequest request) {
         passwordService.changePassword(currentUser, id, request);
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping("/{id}/change_role")
+    public UserDTO changeUserRole(@AuthenticationPrincipal UserDetailsImpl currentUser, @PathVariable UUID id,
+                                  @RequestParam EnumRole role) {
+        return userService.changeUserRole(currentUser, id, role);
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping("/{id}/change_position")
+    public UserDTO changeUserPosition(@AuthenticationPrincipal UserDetailsImpl currentUser, @PathVariable UUID id,
+                                  @RequestParam EnumPosition position) {
+        return userService.changeUserPosition(currentUser, id, position);
     }
 }
