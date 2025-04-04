@@ -14,8 +14,10 @@ import ru.anikeeva.petprojcets.tasktracker.exceptions.UserNotFoundException;
 import ru.anikeeva.petprojcets.tasktracker.mappers.UserMapper;
 import ru.anikeeva.petprojcets.tasktracker.models.Position;
 import ru.anikeeva.petprojcets.tasktracker.models.User;
+import ru.anikeeva.petprojcets.tasktracker.models.enums.EnumPosition;
 import ru.anikeeva.petprojcets.tasktracker.models.enums.EnumRole;
 import ru.anikeeva.petprojcets.tasktracker.models.impl.UserDetailsImpl;
+import ru.anikeeva.petprojcets.tasktracker.repositories.PositionRepository;
 import ru.anikeeva.petprojcets.tasktracker.repositories.UserRepository;
 
 import java.time.LocalDate;
@@ -27,6 +29,8 @@ import java.util.UUID;
 public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final PositionRepository positionRepository;
+
     public User findUserByUsername(final String username) {
         return userRepository.findByUsername(username).orElseThrow(
                 () -> new UsernameNotFoundException("Пользователь с указанным именем не найден"));
@@ -74,9 +78,34 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public UserDTO changeUserRole(UserDetailsImpl currentUser, final UUID userId, final EnumRole role) {
+        if (!isAdmin(currentUser)) {
+            throw new NoRightException("У вас нет прав для изменения роли этого пользователя");
+        }
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("Пользователь не найден"));
+        user.setRole(role);
+        return userMapper.userToUserDTO(userRepository.save(user));
+    }
+
+    public UserDTO changeUserPosition (final UserDetailsImpl currentUser, final UUID userId, final EnumPosition enumPosition) {
+        if (!isAdmin(currentUser)) {
+            throw new NoRightException("У вас нет прав для изменения должности этого пользователя");
+        }
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("Пользователь не найден"));
+        Position position = positionRepository.findByPosition(enumPosition);
+        user.setPosition(position);
+        return userMapper.userToUserDTO(userRepository.save(user));
+    }
+
     private void checkRightsOfUser(final UserDetailsImpl currentUser, final UUID userId) {
         if (!currentUser.getId().equals(userId)) {
             throw new NoRightException("У вас нет прав на изменение профиля этого пользователя");
         }
+    }
+
+    private boolean isAdmin(final UserDetailsImpl currentUser) {
+        User user = userRepository.findById(currentUser.getId()).orElseThrow(() ->
+                new UserNotFoundException("Пользователь не найден"));
+        return user.getRole() == EnumRole.ROLE_ADMIN;
     }
 }
